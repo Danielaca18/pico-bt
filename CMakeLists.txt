@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Set project and target name
-set(PROJECT_NAME "Template")
-set(TARGET_NAME "Template")
+set(PROJECT_NAME "pico_bt")
+set(TARGET_NAME "pico_bt")
+set(LIBRARY_NAME "pico_btlib")
 
 # Include project configs
 include(${CMAKE_SOURCE_DIR}/cmake/import_config.cmake)
