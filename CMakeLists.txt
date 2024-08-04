@@ -26,13 +26,14 @@ add_subdirectory(inc)
 add_executable(${TARGET_NAME} ${SRC} ${INC})
 target_link_libraries(${TARGET_NAME} 
     pico_stdlib 
-    pico_unique_id 
+    pico_unique_id
     pico_btstack_ble
     pico_btstack_cyw43
     pico_cyw43_arch_none
+    bootsel_btnlib
 )
 
-pico_btstack_make_gatt_header(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/example.gatt")
+pico_btstack_make_gatt_header(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/hog_keyboard.gatt")
 
 # Add include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
