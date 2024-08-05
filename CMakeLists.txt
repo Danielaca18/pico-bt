@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 
 # Set project and target name
-set(PROJECT_NAME "Template")
-set(TARGET_NAME "Template")
+set(PROJECT_NAME "pico_bt")
+set(TARGET_NAME "pico_bt")
+set(LIBRARY_NAME "pico_btlib")
 
 # Include project configs
 include(${CMAKE_SOURCE_DIR}/cmake/import_config.cmake)
@@ -23,7 +24,16 @@ add_subdirectory(inc)
 
 # Setup executable
 add_executable(${TARGET_NAME} ${SRC} ${INC})
-target_link_libraries(${TARGET_NAME} pico_stdlib pico_unique_id)
+target_link_libraries(${TARGET_NAME} 
+    pico_stdlib 
+    pico_unique_id
+    pico_btstack_ble
+    pico_btstack_cyw43
+    pico_cyw43_arch_none
+    bootsel_btnlib
+)
+
+pico_btstack_make_gatt_header(${TARGET_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/hog_keyboard.gatt")
 
 # Add include directories
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
