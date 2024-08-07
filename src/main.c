@@ -1,5 +1,6 @@
 #include "btstack_run_loop.h"
 #include "pico/stdlib.h"
+#include "btstack.h"
 
 int btstack_main();
 

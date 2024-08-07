@@ -1,20 +1,26 @@
-
-
-
 #include "hog_keypad.h"
 
+#define DEBUG_PRINT
 #define TYPING_PERIOD_MS 2
 
 const uint8_t adv_data_len = sizeof(adv_data);
 
 static int le_keyboard_setup(void){
-
     if (cyw43_arch_init()) {
         printf("failed to initialise cyw43_arch\n");
         return 1;
     }
+    #ifdef DEBUG_PRINT
+    printf("[Log] Debug: Initialized bt and wifi module.\n");
+    #endif
 
+    //btstack_memory_init();
+    //btstack_run_loop_embedded_get_instance()->init();
+    
     l2cap_init();
+    #ifdef DEBUG_PRINT
+    printf("[Log] Debug: Initialized btstack run loop.\n");
+    #endif
 
     // setup SM: No IO
     sm_init();
@@ -22,11 +28,14 @@ static int le_keyboard_setup(void){
     #ifndef FIXED_PASSKEY
     sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);
     sm_set_authentication_requirements(SM_AUTHREQ_SECURE_CONNECTION | SM_AUTHREQ_BONDING);
-
     #else // Allows bluetooth connection to be secured by a fixed passkey
     sm_set_io_capabilities(IO_CAPABILITY_KEYBOARD_ONLY);
     sm_set_authentication_requirements(SM_AUTHREQ_SECURE_CONNECTION|SM_AUTHREQ_MITM_PROTECTION);
     sm_use_fixed_passkey_in_display_role(FIXED_PASSKEY);
+    #endif
+    
+    #ifdef DEBUG_PRINT
+    printf("[Log] Debug: Initialized Security Manager.\n");
     #endif
 
     // setup ATT server
@@ -41,6 +50,10 @@ static int le_keyboard_setup(void){
     // setup HID Device service
     hids_device_init(0, hid_descriptor_keyboard_boot_mode, sizeof(hid_descriptor_keyboard_boot_mode));
 
+    #ifdef DEBUG_PRINT
+    printf("[Log] Debug: Finished setting up device services.\n");
+    #endif
+
     // setup advertisements
     uint16_t adv_int_min = 0x0030;
     uint16_t adv_int_max = 0x0040;
@@ -48,11 +61,19 @@ static int le_keyboard_setup(void){
     // init and enable GAP ads
     init_gap_advertisements(adv_int_min, adv_int_max, 0, adv_data_len, (uint8_t*) adv_data);
 
+    #ifdef DEBUG_PRINT
+    printf("[Log] Debug: Initialized gap advertisements.\n");
+    #endif
+
     // register packet handler with btstack
     register_bt_event_handlers(packet_handler);
 
     // register for HIDS
     hids_device_register_packet_handler(packet_handler);
+
+    #ifdef DEBUG_PRINT
+    printf("[Log] Debug: Registered event handlers\n");
+    #endif
 
     return 0;
 }
