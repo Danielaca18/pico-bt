@@ -1,4 +1,5 @@
 #include "btstack.h"
+#include "logger.h"
 // #include "ble/gatt-service/device_information_service_server.h"
 
 void register_bt_event_handlers(btstack_packet_handler_t packet_handler);

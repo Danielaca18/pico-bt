@@ -25,4 +25,6 @@ void init_gap_advertisements(uint16_t adv_int_min, uint16_t adv_int_max, uint8_t
 
     // Enable gap advertisements
     gap_advertisements_enable(1);
+
+    logger(DEBUG, "Initialized gap advertisements.\n");
 }

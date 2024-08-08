@@ -22,6 +22,9 @@ pico_sdk_init()
 add_subdirectory(src)
 add_subdirectory(inc)
 
+# Add debug compile flag
+add_compile_definitions("CMAKE_DEBUG=$<CONFIG:Debug>")
+
 # Setup executable
 add_executable(${TARGET_NAME} ${SRC} ${INC})
 target_link_libraries(${TARGET_NAME} 
