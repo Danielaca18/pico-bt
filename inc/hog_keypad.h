@@ -26,7 +26,7 @@
 
 #define F13_KEYCODE      104
 
-static btstack_timer_source_t typing_timer;
+//static btstack_timer_source_t typing_timer;
 static int send_keycode;
 static int send_modifier;
 
@@ -98,10 +98,12 @@ const uint8_t adv_data[] = {
 };
 
 static void packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size);
-static void init_ble_services(const uint8_t* profile_data, uint8_t battery_level, const uint8_t* hid_descriptor, size_t hid_descriptor_size);
-static void hids_event_handler(uint8_t *packet);
+//static void init_ble_services(const uint8_t* profile_data, uint8_t battery_level, const uint8_t* hid_descriptor, size_t hid_descriptor_size);
+static void hids_event_handler(uint8_t *packet, btstack_timer_source_t *ts);
 static void bt_le_event_handler(uint8_t *packet);
-static void register_hid_bt_handlers(btstack_packet_handler_t callback);
-static void sm_setup(io_capability_t capabilities, uint8_t auth_req);
-int btstack_main(void);
+//static void register_hid_bt_handlers(btstack_packet_handler_t callback);
+// static void register_hid_timer(btstack_timer_source_t *ts, uint32_t timeout, void (handler)(btstack_timer_source_t *ts));
+// static void register_timer(btstack_timer_source_t *ts, uint32_t timeout, char* timer_name, void (handler)(btstack_timer_source_t *ts));
+static bool hci_event_handler(uint8_t *packet, uint8_t event_type, btstack_timer_source_t *ts);
+static bool sm_event_handler(uint8_t *packet, uint8_t event_type);
 #endif

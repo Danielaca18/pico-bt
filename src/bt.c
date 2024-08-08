@@ -28,3 +28,33 @@ void init_gap_advertisements(uint16_t adv_int_min, uint16_t adv_int_max, uint8_t
 
     logger(DEBUG, "Initialized gap advertisements.\n");
 }
+
+void sm_setup(io_capability_t capabilities, uint8_t auth_req) {
+    sm_init();
+    sm_set_io_capabilities(capabilities);
+    sm_set_authentication_requirements(auth_req);
+    logger(DEBUG, "Initialized Security Manager.\n");
+}
+
+void register_hid_bt_handlers(btstack_packet_handler_t callback) {
+    register_bt_event_handlers(callback);
+    hids_device_register_packet_handler(callback);
+    logger(DEBUG, "Registered HID and BT event handlers.\n");
+}
+
+void init_ble_services(const uint8_t* profile, uint8_t battery_level, const uint8_t* hid_descriptor, size_t hid_descriptor_size) {
+    // setup ATT server
+    att_server_init(profile, NULL, NULL);
+    battery_service_server_init(battery_level);
+    device_information_service_server_init();
+    hids_device_init(0, hid_descriptor, hid_descriptor_size);
+    logger(DEBUG, "Finished setting up device services.\n");
+}
+
+void register_timer(btstack_timer_source_t *ts, uint32_t timeout, char* timer_name, void (handler)(btstack_timer_source_t *ts)) {
+    if (handler != NULL) ts->process = handler;
+    btstack_run_loop_base_remove_timer(ts);
+    btstack_run_loop_set_timer(ts, timeout);
+    btstack_run_loop_add_timer(ts);
+    if (timer_name) logger(DEBUG, "Registered timer: %s\n", timer_name);
+}
