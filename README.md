@@ -1,19 +1,23 @@
-# Repo Template
+# Pico BT
 
-This library contains general configuration files and functions related to the RPi Pico W's bluetooth functionality. The library is intended to be used as a submodule in other projects.
+HID Over GATT (HOG) Keyboard program for Raspberry Pi Pico.
 
 ## 🛠️ Setup
 
-### 1. Add the Repository as a Submodule
+### 1. Clone the repository
 ```bash
-git submodule add https://github.com/Danielaca18/pico-bt.git
+git clone https://github.com/Danielaca18/pico-bt.git
 ```
 
+### 2. Generate Build Files
+```bash
+cmake -G "Ninja" -B build
+```
 
-### 3. Include the Library in Your Project
-```cmake
-add_subdirectory(pico-bt)
-target_link_libraries(your_project pico-btlib)
+### 3. Compile the Project
+```bash
+cd build
+ninja
 ```
 
 ## 💼 License
