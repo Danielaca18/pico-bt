@@ -58,3 +58,13 @@ void register_timer(btstack_timer_source_t *ts, uint32_t timeout, char* timer_na
     btstack_run_loop_add_timer(ts);
     if (timer_name) logger(DEBUG, "Registered timer: %s\n", timer_name);
 }
+
+bool bt_hardware_init() {
+    if (cyw43_arch_init()) {
+        logger(ERROR, "Failed to initialize cyw43_arch\n");
+        return 1;
+    }
+    l2cap_init();
+    logger(DEBUG, "Initialized BT hardware.\n");
+    return 0;
+}
