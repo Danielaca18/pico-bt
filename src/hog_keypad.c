@@ -1,13 +1,5 @@
 #include "hog_keypad.h"
 
-#define DEBUG_PRINT
-#define TYPING_PERIOD_MS        2
-
-#define DEFAULT_BATTERY_LEVEL   100
-
-#define ADV_INT_MIN             0x0030
-#define ADV_INT_MAX             0x0040
-
 static int le_keyboard_setup(void){
     if (bt_hardware_init()) return 1;
 
