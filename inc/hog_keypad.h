@@ -10,7 +10,6 @@
 #define BTSTACK_FILE__ "hog_keypad.c"
 
 #include "btstack.h"
-#include "pico/cyw43_arch.h"
 #include "ble/gatt-service/battery_service_server.h"
 #include "ble/gatt-service/device_information_service_server.h"
 #include "ble/gatt-service/hids_device.h"
@@ -26,8 +25,6 @@ static int send_keycode;
 static int send_modifier;
 
 static hci_con_handle_t con_handle = HCI_CON_HANDLE_INVALID;
-static uint8_t battery = 100;
-static uint8_t protocol_mode = 1;
 
 /**
  * @brief HID Descriptor
@@ -150,4 +147,23 @@ static bool hci_event_handler(uint8_t *packet, uint8_t event_type, btstack_timer
  * @return false 
  */
 static bool sm_event_handler(uint8_t *packet, uint8_t event_type);
+
+/**
+ * @brief Sets Connection Handle
+ * 
+ * @param new_handle New connection handler.
+ */
+static inline void set_con_handle(hci_con_handle_t new_handle) {
+    con_handle = new_handle;
+}
+
+/**
+ * @brief Gets Connection Handle
+ * 
+ * @return hci_con_handle_t Connection handler.
+ */
+static inline hci_con_handle_t get_con_handle() {
+    return con_handle;
+}
+
 #endif
