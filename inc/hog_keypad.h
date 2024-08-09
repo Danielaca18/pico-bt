@@ -20,13 +20,8 @@
 #include "bootsel.h"
 #include "logger.h"
 
-#ifndef DEMO_TEXT
-#define DEMO_TEXT "\n\nHello World!\nThis is the Pico HOG\n\n"
-#endif
-
 #define F13_KEYCODE      104
 
-//static btstack_timer_source_t typing_timer;
 static int send_keycode;
 static int send_modifier;
 
@@ -34,14 +29,18 @@ static hci_con_handle_t con_handle = HCI_CON_HANDLE_INVALID;
 static uint8_t battery = 100;
 static uint8_t protocol_mode = 1;
 
-// from USB HID Specification 1.1, Appendix B.1
+/**
+ * @brief HID Descriptor
+ * @details from USB HID Specification 1.1, Appendix B.1
+ * 
+ */
 const uint8_t hid_descriptor_keyboard_boot_mode[] = {
     0x05, 0x01,                    // Usage Page (Generic Desktop)
     0x09, 0x06,                    // Usage (Keyboard)
     0xa1, 0x01,                    // Collection (Application)
     0x85,  0x01,                   // Report ID 1
 
-    // Modifier byte
+    /** Modifier Byte */
 
     0x75, 0x01,                    //   Report Size (1)
     0x95, 0x08,                    //   Report Count (8)
@@ -86,6 +85,10 @@ const uint8_t hid_descriptor_keyboard_boot_mode[] = {
     0xc0,                          // End collection
 };
 
+/**
+ * @brief   Advertisement Data
+ * @details Specifies device attributes and types.
+ */
 const uint8_t adv_data[] = {
     // Flags general discoverable, BR/EDR not supported
     0x02, BLUETOOTH_DATA_TYPE_FLAGS, 0x06,
@@ -97,13 +100,54 @@ const uint8_t adv_data[] = {
     0x03, BLUETOOTH_DATA_TYPE_APPEARANCE, 0xC1, 0x03,
 };
 
+/**
+ * @brief   Packet Handler
+ * @details Handles all packets/events.
+ * 
+ * @param   packet_type 
+ * @param   channel 
+ * @param   packet 
+ * @param   size 
+ */
 static void packet_handler (uint8_t packet_type, uint16_t channel, uint8_t *packet, uint16_t size);
-//static void init_ble_services(const uint8_t* profile_data, uint8_t battery_level, const uint8_t* hid_descriptor, size_t hid_descriptor_size);
+
+/**
+ * @brief   HID Event Handler
+ * @details Handles all HID events.
+ * 
+ * @param   packet 
+ * @param   ts 
+ */
 static void hids_event_handler(uint8_t *packet, btstack_timer_source_t *ts);
+
+/**
+ * @brief   BLE Event Handler
+ * @details Handles all BT LE events.
+ * 
+ * @param packet 
+ */
 static void bt_le_event_handler(uint8_t *packet);
-//static void register_hid_bt_handlers(btstack_packet_handler_t callback);
-// static void register_hid_timer(btstack_timer_source_t *ts, uint32_t timeout, void (handler)(btstack_timer_source_t *ts));
-// static void register_timer(btstack_timer_source_t *ts, uint32_t timeout, char* timer_name, void (handler)(btstack_timer_source_t *ts));
+
+/**
+ * @brief   HCI Event Handler
+ * @details Handles all HCI events.
+ * 
+ * @param packet 
+ * @param event_type 
+ * @param ts 
+ * @return true 
+ * @return false 
+ */
 static bool hci_event_handler(uint8_t *packet, uint8_t event_type, btstack_timer_source_t *ts);
+
+/**
+ * @brief   SM Event Handler
+ * @details Handles all security events.
+ * 
+ * @param packet 
+ * @param event_type 
+ * @return true 
+ * @return false 
+ */
 static bool sm_event_handler(uint8_t *packet, uint8_t event_type);
 #endif
