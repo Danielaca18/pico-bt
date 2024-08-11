@@ -25,7 +25,6 @@ static int send_modifier;
 
 static hci_con_handle_t con_handle = HCI_CON_HANDLE_INVALID;
 
-
 /**
  * @brief   Packet Handler
  * @details Handles all packets/events.
@@ -94,5 +93,7 @@ static inline void set_con_handle(hci_con_handle_t new_handle) {
 static inline hci_con_handle_t get_con_handle() {
     return con_handle;
 }
+
+int le_keyboard_setup(void);
 
 #endif

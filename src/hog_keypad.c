@@ -1,11 +1,11 @@
 #include "hog_keypad.h"
 
-static int le_keyboard_setup(void){
+int le_keyboard_setup(void) {
     if (bt_hardware_init()) return 1;
 
     sm_setup(IO_CAPABILITY_NO_INPUT_NO_OUTPUT, SM_AUTHREQ_SECURE_CONNECTION | SM_AUTHREQ_BONDING);
-    init_ble_services(profile_data, DEFAULT_BATTERY_LEVEL, hid_descriptor_keyboard_boot_mode, sizeof(hid_descriptor_keyboard_boot_mode));
-    init_gap_advertisements(ADV_INT_MIN, ADV_INT_MAX, 0, sizeof(adv_data), (uint8_t*) adv_data);
+    init_ble_services(profile_data, DEFAULT_BATTERY_LEVEL, hid_descriptor_keyboard_boot_mode, hid_descriptor_len);
+    init_gap_advertisements(ADV_INT_MIN, ADV_INT_MAX, 0, adv_data_len, (uint8_t*) adv_data);
     register_hid_bt_handlers(packet_handler);
 
     logger(INFO, "Keyboard initialized\n");
@@ -15,7 +15,8 @@ static int le_keyboard_setup(void){
 
 static void send_report(int modifier, int keycode, uint8_t protocol_mode) {
     hci_con_handle_t handle = get_con_handle();
-    uint8_t report[] = {  modifier, 0, keycode, 0, 0, 0, 0, 0};
+    uint8_t report[] = {modifier, 0,
+    keycode, 0, 0, 0, 0, 0};
 
     if (protocol_mode) {
         hids_device_send_input_report(handle, report, sizeof(report));
@@ -24,19 +25,17 @@ static void send_report(int modifier, int keycode, uint8_t protocol_mode) {
     }
 }
 
-static void send_key(int modifier, int keycode){
-    send_keycode = keycode;
-    send_modifier = modifier;
-    hci_con_handle_t handle = get_con_handle();
-
-    hids_device_request_can_send_now_event(handle);
-}
-
 static void typing_timer_handler(btstack_timer_source_t * ts){
+    hci_con_handle_t handle = get_con_handle();
+    
     if (get_bootsel_button()) {
-        send_key(0, F13_KEYCODE);
+        send_keycode = F13_KEYCODE;
+        send_modifier = 0;
+        hids_device_request_can_send_now_event(handle);
     } else {
-        send_key(0, 0);
+        send_keycode = 0;
+        send_modifier = 0;
+        hids_device_request_can_send_now_event(handle);
     }
     register_timer(ts, TYPING_PERIOD_MS, NULL, NULL);
 }
@@ -133,8 +132,7 @@ static void bt_le_event_handler(uint8_t *packet) {
     }
 }
 
-int btstack_main(void)
-{
+int btstack_main(void) {
     if (le_keyboard_setup()) return 1;
     hci_power_control(HCI_POWER_ON);
     return 0;
