@@ -10,6 +10,7 @@
  */
 
 #ifndef BT_H
+#define BT_H
 
 #include "pico/cyw43_arch.h"
 #include "btstack.h"
