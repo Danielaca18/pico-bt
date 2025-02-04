@@ -37,6 +37,7 @@
 
 // BTstack HAL configuration
 #define HAVE_EMBEDDED_TIME_MS
+
 // map btstack_assert onto Pico SDK assert()
 #define HAVE_ASSERT
 // Some USB dongles take longer to respond to HCI reset (e.g. BCM20702A).
