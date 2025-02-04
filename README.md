@@ -1,4 +1,4 @@
-# Repo Template
+# Pico BT
 
 This library contains general configuration files and functions related to the RPi Pico W's bluetooth functionality. The library is intended to be used as a submodule in other projects.
 
